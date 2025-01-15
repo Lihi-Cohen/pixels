@@ -5,16 +5,12 @@ import subprocess
 print("Current Working Directory:", os.getcwd())
 
 # Define input JSON files
-# json_files = [
-#     "/Users/lihicohen/Desktop/final model/MUSIC_dataset/MUSIC21_solo_videos.json",
-#     "/Users/lihicohen/Desktop/final model/MUSIC_dataset/MUSIC_duet_videos.json",
-#     "/Users/lihicohen/Desktop/final model/MUSIC_dataset/MUSIC_solo_videos.json"
-# ]
+
 
 json_files = [
-    "/content/Sound-of-Pixels/MUSIC_dataset/MUSIC21_solo_videos.json",
-    "/content/Sound-of-Pixels/MUSIC_dataset/MUSIC_duet_videos.json",
-    "/content/Sound-of-Pixels/MUSIC_dataset/MUSIC_solo_videos.json"
+    "/content/pixels/MUSIC_dataset/MUSIC21_solo_videos.json",
+    "/content/pixels/MUSIC_dataset/MUSIC_duet_videos.json",
+    "/content/pixels/MUSIC_dataset/MUSIC_solo_videos.json"
 ]
 
 
@@ -79,16 +75,11 @@ def download_videos(json_file, folder_name):
                 print(f"Error downloading {video_id} - {url}: {e}")
 
 # Map JSON file names to folder names
-# json_folder_map = {
-#     "/Users/lihicohen/Desktop/final model/MUSIC_dataset/MUSIC21_solo_videos.json": "MUSIC21_solo",
-#     "/Users/lihicohen/Desktop/final model/MUSIC_dataset/MUSIC_duet_videos.json": "MUSIC_duet",
-#     "/Users/lihicohen/Desktop/final model/MUSIC_dataset/MUSIC_solo_videos.json": "MUSIC_solo"
-# }
 
 json_folder_map = {
-    "/content/Sound-of-Pixels/MUSIC_dataset/MUSIC21_solo_videos.json": "MUSIC21_solo",
-    "/content/Sound-of-Pixels/MUSIC_dataset/MUSIC_duet_videos.json": "MUSIC_duet",
-    "/content/Sound-of-Pixels/MUSIC_dataset/MUSIC_solo_videos.json": "MUSIC_solo"
+    "/content/pixels/MUSIC_dataset/MUSIC21_solo_videos.json": "MUSIC21_solo",
+    "/content/pixels/MUSIC_dataset/MUSIC_duet_videos.json": "MUSIC_duet",
+    "/content/pixels/MUSIC_dataset/MUSIC_solo_videos.json": "MUSIC_solo"
 }
 
 # Download videos and audio for each JSON file
