@@ -279,20 +279,18 @@ def evaluate(netWrapper, loader, history, epoch, args):
     for i, batch_data in enumerate(loader):
         # forward pass
         outputs = netWrapper.forward(batch_data, args)
-        frame = batch_data['frames'][2]
+        frames = batch_data['frames']
         
-        # add plots
-        for n in range(N):
-            # Reshape spectrograms for visualization
-            B, C, HI, WI, HS, WS = outputs.shape
-            for b in range(B):  # Batch loop
-                pixel_spectrograms_flat = outputs[b].view(HI * WI, HS * WS).detach().cpu().numpy()
+        # Reshape spectrograms for visualization
+        B, C, HI, WI, HS, WS = outputs.shape
+        for b in range(B):  # Batch loop
+            pixel_spectrograms_flat = outputs[b].view(HI * WI, HS * WS).detach().cpu().numpy()
 
-                # Visualize clustering with PCA
-                visualize_sound_clustering(
-                    pixel_spectrograms_flat,
-                    frames[b].cpu().numpy(),  # Assuming frames is the video frame batch
-                    f"{args.vis}/sound_clustering_b{b}_n{n}.png"
+            # Visualize clustering with PCA
+            visualize_sound_clustering(
+                pixel_spectrograms_flat,
+                frames[b][0].cpu().numpy(),  # Assuming frames is the video frame batch
+                f"{args.vis}/sound_clustering_b{b}_n{n}.png"
         )
 
   
@@ -403,7 +401,7 @@ def main(args):
     nets = (net_sound, net_frame, net_synthesizer)
     
     # Dataset and Loader
-    dataset_val = MUSICNoMixDataset(
+    dataset_val = MUSICMixDataset(
         args.list_val, args, max_sample=args.num_val, split='val')
 
     loader_val = torch.utils.data.DataLoader(
@@ -412,8 +410,6 @@ def main(args):
         shuffle=False,
         num_workers=2,
         drop_last=False)
-    args.epoch_iters = len(dataset_train) // args.batch_size
-    print('1 Epoch = {} iters'.format(args.epoch_iters))
 
     # Wrap networks
     netWrapper = NetWrapper(nets)
