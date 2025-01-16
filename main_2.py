@@ -33,9 +33,10 @@ class NetWrapper(torch.nn.Module):
         super(NetWrapper, self).__init__()
         self.net_sound, self.net_frame, self.net_synthesizer = nets
 
-    def forward_pixel_wise(self, batch_data, args):
+    def forward(self, batch_data, args):
         frames = batch_data['frames']  # Extract frames from the batch
         audio = batch_data['audio']    # Extract audio from the batch
+        mags = batch_data['mags']
 
 
 
@@ -47,7 +48,7 @@ class NetWrapper(torch.nn.Module):
             grid_warp = torch.from_numpy(
                 warpgrid(B, 256, T, warp=True)).to(args.device)
             for i in range(len(mags)):
-                audio[i] = F.grid_sample(audio[i], grid_warp)
+                mags[i] = F.grid_sample(mags[i], grid_warp)
 
         # LOG magnitude
         log_mags = torch.log(audio).detach()
@@ -281,7 +282,7 @@ def evaluate(netWrapper, loader, history, epoch, args):
 
     for i, batch_data in enumerate(loader):
         # forward pass
-        outputs = netWrapper.forward_pixelwise(batch_data, args)
+        outputs = netWrapper.forward(batch_data, args)
         frame = batch_data['frames'][2]
         
         # add plots
