@@ -1,2 +1,2 @@
 from .music import *
-from .music_nomix import *
+from .music_nomiix import *
