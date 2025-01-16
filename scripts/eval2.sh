@@ -9,7 +9,7 @@ OPTS+="--list_val data/val.csv "
 OPTS+="--arch_sound unet7 "
 OPTS+="--arch_synthesizer linear "
 OPTS+="--arch_frame resnet18dilated "
-OPTS+="--img_pool maxpool "
+OPTS+="--img_pool False "
 OPTS+="--num_channels 32 "
 # binary mask, BCE loss, weighted loss
 OPTS+="--binary_mask 1 "
