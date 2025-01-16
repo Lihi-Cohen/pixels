@@ -33,13 +33,14 @@ class MUSICNoMixDataset(BaseDataset):
             frames = self._load_frames(path_frames)
             center_time = (center_frame - 0.5) / self.fps  # Optional jitter or fixed center
             audio = self._load_audio(path_audio, center_time)
+            mag, _ = self._stft(audio)
         except Exception as e:
             print(f"Failed loading frame/audio: {e}")
             # Handle error, create dummy data
             frames, audio = self.dummy_frame_audio_data()
 
         # Return dictionary with frame and audio data
-        ret_dict = {'frames': frames, 'audio': audio}
+        ret_dict = {'frames': frames, 'audio': audio, mags:'mag'}
         
         if self.split != 'train':
             ret_dict['infos'] = infos  # Metadata if not training
