@@ -14,7 +14,7 @@ import imageio
 
 # Our libs
 from arguments import ArgParser
-from dataset import MUSICMixDataset, MUSICNoMixDataset
+from dataset import MUSICMixDataset
 from models import ModelBuilder, activate
 from utils import AverageMeter, \
     recover_rgb, magnitude2heatmap,\
