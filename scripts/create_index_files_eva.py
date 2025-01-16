@@ -36,7 +36,7 @@ if __name__ == '__main__':
                         help="80% for training, 20% for validation")
     parser.add_argument('--json_file', default='./data/video_info.json',
                         help="Path to the JSON file containing video categories")
-    parser.add_argument('--num_samples', default=10, type=int,
+    parser.add_argument('--num_samples', default=2, type=int,
                         help="Number of samples to select from each category in the JSON file")
     args = parser.parse_args()
 
