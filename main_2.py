@@ -57,7 +57,7 @@ class NetWrapper(torch.nn.Module):
         # 2. forward net_frame -> BxCxHIxHS
         # required pool = False argument
         if args.img_pool:
-        	print('Evaluation requires pool argument == False' !!)
+        	print('Evaluation requires pool argument == False !!')
 
         feat_frames = self.net_frame.forward_multiframe(frames)  # BxCxTxHIxHS (T = num_frames)
         feat_frames = activate(feat_frames, args.img_activation)
