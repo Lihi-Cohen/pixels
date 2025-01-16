@@ -284,7 +284,7 @@ def evaluate(netWrapper, loader, history, epoch, args):
         frames = batch_data['frames']
         
         # Reshape spectrograms for visualization
-        B, C, HI, WI, HS, WS = outputs.shape
+        B, HI, WI, HS, WS = outputs.shape
         for b in range(B):  # Batch loop
             pixel_spectrograms_flat = outputs[b].view(HI * WI, HS * WS).detach().cpu().numpy()
 
