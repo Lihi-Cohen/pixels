@@ -33,7 +33,7 @@ class MUSICNoMixDataset(BaseDataset):
             frames = self._load_frames(path_frames)
             center_time = (center_frame - 0.5) / self.fps  # Optional jitter or fixed center
             audio = self._load_audio(path_audio, center_time)
-            mag, _ = self._stft(audio
+            mag, _ = self._stft(audio)
             mag = mag.unsqueeze(0)
 
         except Exception as e:
