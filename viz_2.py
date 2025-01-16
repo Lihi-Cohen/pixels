@@ -1,5 +1,6 @@
 from sklearn.decomposition import PCA
 from PIL import Image
+import numpy as np
 def visualize_sound_clustering(pixel_spectrograms, frame, output_path):
     """
     Visualize sound clustering by mapping log spectrograms to RGB using PCA.
