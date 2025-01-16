@@ -281,7 +281,18 @@ def evaluate(netWrapper, loader, history, epoch, args):
         frame = batch_data['frames'][2]
         
         # add plots
-        
+        for n in range(N):
+            # Reshape spectrograms for visualization
+            B, C, HI, WI, HS, WS = outputs.shape
+            for b in range(B):  # Batch loop
+                pixel_spectrograms_flat = outputs[b].view(HI * WI, HS * WS).detach().cpu().numpy()
+
+                # Visualize clustering with PCA
+                visualize_sound_clustering(
+                    pixel_spectrograms_flat,
+                    frames[b].cpu().numpy(),  # Assuming frames is the video frame batch
+                    f"{args.vis}/sound_clustering_b{b}_n{n}.png"
+        )
 
   
     
