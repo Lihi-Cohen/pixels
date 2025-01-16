@@ -57,7 +57,7 @@ if __name__ == '__main__':
     print('{} audio/frames pairs found.'.format(len(infos)))
 
     # split train/val
-    n_train = int(len(infos) * 0.8)
+    n_train = int(0)
     random.shuffle(infos)
     trainset = infos[0:n_train]
     valset = infos[n_train:]
