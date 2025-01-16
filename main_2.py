@@ -46,8 +46,8 @@ class NetWrapper(torch.nn.Module):
         if args.log_freq:
             grid_warp = torch.from_numpy(
                 warpgrid(B, 256, T, warp=True)).to(args.device)
-            for i in range(length(mags)):
-                audio[i] = F.grid_sample(audiuo[i], grid_warp)
+            for i in range(len(mags)):
+                audio[i] = F.grid_sample(audio[i], grid_warp)
 
         # LOG magnitude
         log_mags = torch.log(audio).detach()
