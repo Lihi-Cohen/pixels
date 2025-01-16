@@ -80,7 +80,4 @@ for dir in base_dirs:
                     audio_output_dir,
                     frames_output_dir
                 )
-
-    
-
 print("Preprocessing completed.")
