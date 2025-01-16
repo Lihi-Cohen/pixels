@@ -292,7 +292,7 @@ def evaluate(netWrapper, loader, history, epoch, args):
             visualize_sound_clustering(
                 pixel_spectrograms_flat,
                 frames[b][0].cpu().numpy(),  # Assuming frames is the video frame batch
-                f"{args.vis}/sound_clustering_b{b}_n{n}.png"
+                f"{args.vis}/sound_clustering_b{b}.png"
         )
 
   
