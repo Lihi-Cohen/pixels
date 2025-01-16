@@ -278,8 +278,10 @@ def evaluate(netWrapper, loader, history, epoch, args):
     for i, batch_data in enumerate(loader):
         # forward pass
         outputs = netWrapper.forward_pixelwise(batch_data, args)
-
+        frame = batch_data['frames'][2]
+        
         # add plots
+        
 
   
     
