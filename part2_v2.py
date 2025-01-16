@@ -59,10 +59,10 @@ def extract_audio_and_frames(instrument, video_file, video_path, audio_path, fra
         print(f"Error processing {video_file}: {e}")
 
 # Walk through the downloaded videos
-for dir in basedirs:
+for dir in base_dirs:
     path = os.path.join(dir, "eval_videos")
     for instrument in os.listdir(path):
-        instrument_path = os.path.join(base_dir, instrument)
+        instrument_path = os.path.join(path, instrument)
         if not os.path.isdir(instrument_path):
             continue
         video_dir = os.path.join(instrument_path, "videos")
