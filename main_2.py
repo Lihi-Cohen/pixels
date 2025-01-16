@@ -51,7 +51,7 @@ class NetWrapper(torch.nn.Module):
                 mags[i] = F.grid_sample(mags[i], grid_warp)
 
         # LOG magnitude
-        log_mags = torch.log(audio).detach()
+        log_mags = torch.log(mags).detach()
 
         # 1. forward net_sound -> BxCxHSxWS
         feat_sound = self.net_sound(log_mag_mix)
