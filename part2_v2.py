@@ -2,7 +2,7 @@ import os
 import subprocess
 
 # Define input and output directories
-base_dir = "downloaded_videos/MUSIC21_solo"
+base_dirs = ["downloaded_videos/MUSIC21_solo", "downloaded_videos/MUSIC_duet", "downloaded_videos/MUSIC_solo"]
 output_dir = "data"
 
 # Flag to choose whether to use the new structure
@@ -59,25 +59,28 @@ def extract_audio_and_frames(instrument, video_file, video_path, audio_path, fra
         print(f"Error processing {video_file}: {e}")
 
 # Walk through the downloaded videos
-for instrument in os.listdir(base_dir):
-    instrument_path = os.path.join(base_dir, instrument)
-    if not os.path.isdir(instrument_path):
-        continue
+for dir in basedirs:
+    path = os.path.join(dir, "eval_videos")
+    for instrument in os.listdir(path):
+        instrument_path = os.path.join(base_dir, instrument)
+        if not os.path.isdir(instrument_path):
+            continue
+        video_dir = os.path.join(instrument_path, "videos")
+        if os.path.exists(video_dir):
+            for video_file in os.listdir(video_dir):
+                video_path = os.path.join(video_dir, video_file)
+                if not video_file.endswith(('.mp4', '.mkv', '.avi')):  # Ensure it's a video file
+                    continue
+                
+                # Process videos to extract frames and audio
+                extract_audio_and_frames(
+                    instrument,
+                    video_file,
+                    video_path,
+                    audio_output_dir,
+                    frames_output_dir
+                )
+
     
-    video_dir = os.path.join(instrument_path, "videos")
-    if os.path.exists(video_dir):
-        for video_file in os.listdir(video_dir):
-            video_path = os.path.join(video_dir, video_file)
-            if not video_file.endswith(('.mp4', '.mkv', '.avi')):  # Ensure it's a video file
-                continue
-            
-            # Process videos to extract frames and audio
-            extract_audio_and_frames(
-                instrument,
-                video_file,
-                video_path,
-                audio_output_dir,
-                frames_output_dir
-            )
 
 print("Preprocessing completed.")
