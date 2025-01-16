@@ -61,10 +61,9 @@ class NetWrapper(torch.nn.Module):
         # required pool = False argument
         if args.img_pool:
         	print('Evaluation requires pool argument == False')
-        	return
 
         feat_frames = self.net_frame.forward_multiframe(frames)  # BxCxTxHIxHS
-        # feat_frames = activate(feat_frames, args.img_activation)
+        feat_frames = activate(feat_frames, args.img_activation)
         # averging over temporal dimension
         feat_frames = feat_frames.mean(dim=2)  # New shape: (B, C, HI, WI)
 
