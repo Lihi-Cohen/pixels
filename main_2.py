@@ -23,6 +23,8 @@ from utils import AverageMeter, \
 from viz import plot_loss_metrics, HTMLVisualizer
 
 ##ADDED:
+from sklearn.decomposition import PCA
+from PIL import Image
 from viz_2 import visualize_sound_clustering
 
 
