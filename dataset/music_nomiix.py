@@ -40,7 +40,7 @@ class MUSICNoMixDataset(BaseDataset):
             frames, audio = self.dummy_frame_audio_data()
 
         # Return dictionary with frame and audio data
-        ret_dict = {'frames': frames, 'audio': audio, mags:'mag'}
+        ret_dict = {'frames': frames, 'audio': audio, 'mags':mag}
         
         if self.split != 'train':
             ret_dict['infos'] = infos  # Metadata if not training
