@@ -34,35 +34,32 @@ class NetWrapper(torch.nn.Module):
         self.net_sound, self.net_frame, self.net_synthesizer = nets
 
     def forward(self, batch_data, args):
-        frames = batch_data['frames']  # Extract frames from the batch
-        audio = batch_data['audio']    # Extract audio from the batch
-        mags = batch_data['mags']
+        mags = batch_data['mag_mix']
+        frames = batch_data['frames']
+        mags = mags + 1e-10
 
-
-
-        B = frames.size(0)  # Batch size
-        T = frames.size(2)  # Number of frames in each video sample
+        B = mags.size(0)
+        T = mags.size(3)
 
         # warp the spectrogram
         if args.log_freq:
-            H, W = mags[0].shape[-2:]  # Height and width of mags
-            grid_warp = torch.from_numpy(warpgrid(B, H, W, warp=True)).to(args.device)
-            for i in range(len(mags)):
-                mags[i] = F.grid_sample(mags[i], grid_warp)
+            grid_warp = torch.from_numpy(
+                warpgrid(B, 256, T, warp=True)).to(args.device)
+            mags = F.grid_sample(mags, grid_warp)
 
         # LOG magnitude
         log_mags = torch.log(mags).detach()
 
         # 1. forward net_sound -> BxCxHSxWS
-        feat_sound = self.net_sound(log_mag_mix)
+        feat_sound = self.net_sound(log_mags)
         feat_sound = activate(feat_sound, args.sound_activation)
 
         # 2. forward net_frame -> BxCxHIxHS
         # required pool = False argument
         if args.img_pool:
-        	print('Evaluation requires pool argument == False')
+        	print('Evaluation requires pool argument == False' !!)
 
-        feat_frames = self.net_frame.forward_multiframe(frames)  # BxCxTxHIxHS
+        feat_frames = self.net_frame.forward_multiframe(frames)  # BxCxTxHIxHS (T = num_frames)
         feat_frames = activate(feat_frames, args.img_activation)
         # averging over temporal dimension
         feat_frames = feat_frames.mean(dim=2)  # New shape: (B, C, HI, WI)
