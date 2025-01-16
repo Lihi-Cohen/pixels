@@ -45,7 +45,7 @@ class NetWrapper(torch.nn.Module):
 
         # warp the spectrogram
         if args.log_freq:
-            H, W = mags[i].shape[-2:]  # Height and width of mags[i]
+            H, W = mags[0].shape[-2:]  # Height and width of mags
             grid_warp = torch.from_numpy(warpgrid(B, H, W, warp=True)).to(args.device)
             for i in range(len(mags)):
                 mags[i] = F.grid_sample(mags[i], grid_warp)
