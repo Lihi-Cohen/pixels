@@ -26,6 +26,7 @@ from viz import plot_loss_metrics, HTMLVisualizer
 from sklearn.decomposition import PCA
 from PIL import Image
 from viz_2 import visualize_sound_clustering
+import numpy as np
 
 
 
