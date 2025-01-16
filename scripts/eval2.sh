@@ -16,7 +16,7 @@ OPTS+="--binary_mask 1 "
 OPTS+="--loss bce "
 OPTS+="--weighted_loss 1 "
 # logscale in frequency
-OPTS+="--num_mix 2 "
+OPTS+="--num_mix 1 "
 OPTS+="--log_freq 1 "
 
 # frames-related
