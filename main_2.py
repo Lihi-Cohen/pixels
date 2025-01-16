@@ -22,6 +22,10 @@ from utils import AverageMeter, \
     combine_video_audio, save_video, makedirs
 from viz import plot_loss_metrics, HTMLVisualizer
 
+##ADDED:
+from viz_2 import visualize_sound_clustering
+
+
 
 # Network wrapper, defines forward pass
 class NetWrapper(torch.nn.Module):
