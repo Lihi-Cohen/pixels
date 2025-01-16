@@ -67,7 +67,7 @@ class NetWrapper(torch.nn.Module):
         feat_frames = feat_frames.mean(dim=2)  # New shape: (B, C, HI, WI)
 
         # 3. sound synthesizer
-        pred_masks = self.net_synthesizer.forward_pixelwise(feats_frames, feat_sound)
+        pred_masks = self.net_synthesizer.forward_pixelwise(feat_frames, feat_sound)
         
         return pred_masks
 
