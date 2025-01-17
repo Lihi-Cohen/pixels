@@ -282,19 +282,32 @@ def evaluate(netWrapper, loader, history, epoch, args):
     for i, batch_data in enumerate(loader):
         # forward pass
         outputs = netWrapper.forward(batch_data, args)
-        frames = batch_data['frames']
+        frames = batch_data['frames'][0]  # Get first instrument's frames
         
         # Reshape spectrograms for visualization
         B, HI, WI, HS, WS = outputs.shape
         for b in range(B):  # Batch loop
-            pixel_spectrograms_flat = outputs[b].view(HI * WI, HS * WS).detach().cpu().numpy()
+            # Reshape spectrograms to (HI*WI, HS*WS)
+            pixel_spectrograms_flat = outputs[b].reshape(HI * WI, HS * WS).detach().cpu().numpy()
+            
+            # Get middle frame from sequence for visualization (shape: [3, 224, 224])
+            frame = frames[b, :, 1].cpu().numpy()  # Take middle frame (index 1)
+            
+            output_path = os.path.join(args.vis, f'sound_clustering_batch{i}_sample{b}.png')
+            try:
+                visualize_sound_clustering(
+                    pixel_spectrograms_flat,
+                    frame,
+                    output_path
+                )
+                print(f"Successfully created visualization for batch {i}, sample {b}")
+            except Exception as e:
+                print(f"Error processing batch {i}, sample {b}: {str(e)}")
+                print(f"Shapes - frame: {frame.shape}, spectrograms: {pixel_spectrograms_flat.shape}")
+                continue
 
-            # Visualize clustering with PCA
-            visualize_sound_clustering(
-                pixel_spectrograms_flat,
-                frames[b][0].cpu().numpy(),  # Assuming frames is the video frame batch
-                f"{args.vis}/sound_clustering_b{b}.png"
-        )
+    print('Evaluation visualization completed!')
+    
 
   
     
