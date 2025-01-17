@@ -9,6 +9,8 @@ def visualize_sound_clustering(pixel_spectrograms, frame, output_path):
     import numpy as np
     import matplotlib.pyplot as plt
     from scipy.ndimage import zoom
+    from sklearn.cluster import KMeans
+
     
     # Normalize input
     pixel_spectrograms = np.asarray(pixel_spectrograms)
@@ -145,3 +147,79 @@ def visualize_sound_clustering(pixel_spectrograms, frame, output_path):
   #   plt.tight_layout()
   #   plt.savefig(output_path, dpi=300, bbox_inches='tight')
   #   plt.close()
+
+##OPTION 3 - better seperation with duets:
+# def visualize_sound_clustering(pixel_spectrograms, frame, output_path):
+#     # Normalize input
+#     pixel_spectrograms = np.asarray(pixel_spectrograms)
+#     pixel_spectrograms = (pixel_spectrograms - np.min(pixel_spectrograms)) / \
+#                         (np.max(pixel_spectrograms) - np.min(pixel_spectrograms) + 1e-8)
+    
+#     # Apply PCA
+#     pca_obj = PCA(n_components=3)
+#     sound_features = pca_obj.fit_transform(pixel_spectrograms)
+    
+#     # Apply K-means clustering to separate instruments
+#     kmeans = KMeans(n_clusters=2, random_state=42)
+#     clusters = kmeans.fit_predict(sound_features)
+    
+#     # Create separate masks for each instrument
+#     mask1 = clusters == 0
+#     mask2 = clusters == 1
+    
+#     # Enhance separation by modifying features based on clusters
+#     sound_features_enhanced = sound_features.copy()
+    
+#     # Assign distinct colors to each cluster
+#     sound_features_enhanced[mask1] *= [1.2, 0.8, 0.8]  # Reddish for first instrument
+#     sound_features_enhanced[mask2] *= [0.8, 0.8, 1.2]  # Bluish for second instrument
+    
+#     # Normalize enhanced features
+#     sound_features_enhanced = (sound_features_enhanced - np.min(sound_features_enhanced)) / \
+#                             (np.max(sound_features_enhanced) - np.min(sound_features_enhanced) + 1e-8)
+    
+#     # Apply thresholding to focus on strong signals
+#     threshold = 0.4
+#     weak_signals = np.max(sound_features_enhanced, axis=1) < threshold
+#     sound_features_enhanced[weak_signals] *= 0.3
+    
+#     # Reshape to image grid
+#     overlay = sound_features_enhanced.reshape(14, 14, 3)
+    
+#     # Process frame
+#     frame_display = np.transpose(frame, (1, 2, 0))
+#     frame_display = (frame_display - np.min(frame_display)) / \
+#                    (np.max(frame_display) - np.min(frame_display) + 1e-8)
+    
+#     # Resize overlay
+#     zoom_factors = (frame_display.shape[0]/overlay.shape[0], 
+#                    frame_display.shape[1]/overlay.shape[1], 
+#                    1)
+#     overlay_resized = zoom(overlay, zoom_factors, order=1)
+    
+#     # Create visualization
+#     plt.figure(figsize=(15, 5))
+    
+#     # Original frame
+#     plt.subplot(1, 3, 1)
+#     plt.imshow(frame_display)
+#     plt.title('Original Frame')
+#     plt.axis('off')
+    
+#     # Sound source overlay
+#     plt.subplot(1, 3, 2)
+#     plt.imshow(overlay_resized)
+#     plt.title('Sound Source Separation')
+#     plt.axis('off')
+    
+#     # Blended visualization
+#     plt.subplot(1, 3, 3)
+#     alpha = 0.65
+#     blended = (1 - alpha) * frame_display + alpha * overlay_resized
+#     plt.imshow(np.clip(blended, 0, 1))
+#     plt.title('Blended Visualization')
+#     plt.axis('off')
+    
+#     plt.tight_layout()
+#     plt.savefig(output_path, dpi=300, bbox_inches='tight')
+#     plt.close()
