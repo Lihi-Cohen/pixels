@@ -122,6 +122,11 @@ class ResnetDilated(nn.Module):
         return x
 
     def forward_multiframe(self, x, pool=True):
+        x = torch.stack(x, dim=2)  # Stack along the time dimension
+        x = x.squeeze(2)  # Remove redundent dimension of size 1
+        if len(x.size()) != 5:
+            raise ValueError(f"Input tensor has fewer or more than 5 dimensions : {x.size()}")
+            
         (B, C, T, H, W) = x.size()
         x = x.permute(0, 2, 1, 3, 4).contiguous()
         x = x.view(B*T, C, H, W)
