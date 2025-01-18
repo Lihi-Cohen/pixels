@@ -71,6 +71,8 @@ class NetWrapper(torch.nn.Module):
         pred_masks = self.net_synthesizer.forward_pixelwise(feat_frames, feat_sound)
         
         return pred_masks
+        # return pred_masks, feat_frames, feat_sound
+
 
 # Calculate metrics
 def calc_metrics(batch_data, outputs, args):
@@ -307,6 +309,86 @@ def evaluate(netWrapper, loader, history, epoch, args):
                 continue
 
     print('Evaluation visualization completed!')
+
+# def find_best_channel(visual_features):
+#     """
+#     Find channel that best captures multiple sound sources
+#     """
+#     channels_scores = []
+#     for c in range(visual_features.shape[0]):
+#         channel_map = visual_features[c]
+#         # Normalize
+#         channel_map = (channel_map - channel_map.min()) / (channel_map.max() - channel_map.min() + 1e-8)
+#         # Count distinct activation regions (threshold > 0.5)
+#         active_regions = np.sum(channel_map > 0.5)
+#         # Calculate variance of activations
+#         spatial_variance = np.var(channel_map)
+#         # Combine metrics
+#         score = active_regions * spatial_variance
+#         channels_scores.append(score)
+#     return np.argmax(channels_scores)
+
+
+# def evaluate(netWrapper, loader, history, epoch, args):
+#     print('Evaluating at {} epochs...'.format(epoch))
+#     torch.set_grad_enabled(False)
+
+#     # remove previous viz results
+#     makedirs(args.vis, remove=True)
+
+#     # switch to eval mode
+#     netWrapper.eval()
+    
+#     for i, batch_data in enumerate(loader):
+#         # forward pass
+#         pred_masks, feat_frames, feat_sound = netWrapper.forward(batch_data, args)
+#         frames = batch_data['frames'][0]  # Get first instrument's frames
+        
+#         # Process each item in batch
+#         B, HI, WI, HS, WS = pred_masks.shape
+#         for b in range(B):
+#             # 1. Sound Source Clustering Visualization
+#             pixel_spectrograms_flat = pred_masks[b].reshape(HI * WI, HS * WS).detach().cpu().numpy()
+#             frame = frames[b, :, 1].cpu().numpy()
+            
+#             clustering_path = os.path.join(args.vis, f'sound_clustering_batch{i}_sample{b}.png')
+#             try:
+#                 visualize_sound_clustering(
+#                     pixel_spectrograms_flat,
+#                     frame,
+#                     clustering_path
+#                 )
+#                 print(f"Successfully created clustering visualization for batch {i}, sample {b}")
+#             except Exception as e:
+#                 print(f"Error processing clustering visualization batch {i}, sample {b}: {str(e)}")
+#                 continue
+
+#             # 2. Network Activation Visualization
+#             visual_features = feat_frames[b].detach().cpu().numpy()
+#             audio_features = feat_sound[b].detach().cpu().numpy()
+            
+#             # Find the best channel using new method
+#             best_channel = find_best_channel(visual_features)
+            
+#             # Select best channel features
+#             best_visual_features = visual_features[best_channel:best_channel+1]
+#             best_audio_features = audio_features[best_channel:best_channel+1]
+            
+#             activation_path = os.path.join(args.vis, f'activations_batch{i}_sample{b}.png')
+#             try:
+#                 visualize_activations(
+#                     frame,
+#                     best_visual_features,
+#                     best_audio_features,
+#                     activation_path,
+#                     channel_idx=best_channel
+#                 )
+#                 print(f"Successfully created activation visualization for batch {i}, sample {b}")
+#             except Exception as e:
+#                 print(f"Error processing activation visualization batch {i}, sample {b}: {str(e)}")
+#                 continue
+
+#     print('Evaluation visualization completed!')
     
 
   
