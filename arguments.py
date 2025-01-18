@@ -100,6 +100,8 @@ class ArgParser(object):
         parser.add_argument('--num_epoch', default=100, type=int,
                             help='epochs to train for')
         parser.add_argument('--lr_frame', default=1e-4, type=float, help='LR')
+        parser.add_argument('--lr_vit', default=1e-4, type=float, help='LR')
+        parser.add_argument('--lr_projector', default=5e-3, type=float, help='LR')
         parser.add_argument('--lr_sound', default=1e-3, type=float, help='LR')
         parser.add_argument('--lr_synthesizer',
                             default=1e-3, type=float, help='LR')
