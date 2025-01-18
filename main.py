@@ -455,14 +455,14 @@ def create_optimizer(nets, args):
 
     if vis_train_mode == 'stage_1':
         # Train only non-ViT parameters of the visual net
-        param_groups.append({'params': net_frame.feature_projector.parameters(), 'lr': args.lr_frame})
+        param_groups.append({'params': net_frame.feature_projector.parameters(), 'lr': args.lr_projector})
 
     elif vis_train_mode == 'stage_2':
         # Train non-ViT parameters of visual net + audio net + synthesizer net
         param_groups.extend([
             {'params': net_sound.parameters(), 'lr': args.lr_sound},
             {'params': net_synthesizer.parameters(), 'lr': args.lr_synthesizer},
-            {'params': net_frame.feature_projector.parameters(), 'lr': args.lr_frame},
+            {'params': net_frame.feature_projector.parameters(), 'lr': args.lr_projector},
         ])
 
     elif vis_train_mode == 'stage_3':
@@ -470,8 +470,8 @@ def create_optimizer(nets, args):
         param_groups.extend([
             {'params': net_sound.parameters(), 'lr': args.lr_sound},
             {'params': net_synthesizer.parameters(), 'lr': args.lr_synthesizer},
-            {'params': net_frame.vit.parameters(), 'lr': args.lr_frame},
-            {'params': net_frame.feature_projector.parameters(), 'lr': args.lr_frame},
+            {'params': net_frame.vit.parameters(), 'lr': args.lr_vit},
+            {'params': net_frame.feature_projector.parameters(), 'lr': args.lr_projector},
         ])
 
     else:
