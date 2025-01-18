@@ -65,6 +65,9 @@ class ModelBuilder():
             original_resnet = torchvision.models.resnet18(pretrained)
             net = ResnetDilated(
                 original_resnet, fc_dim=fc_dim, pool_type=pool_type)
+        elif arch == 'vit':
+            net = Vit(
+                fc_dim=fc_dim, pool_type=pool_type)
         else:
             raise Exception('Architecture undefined!')
 
