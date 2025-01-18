@@ -433,11 +433,50 @@ def checkpoint(nets, history, epoch, args):
 
 
 def create_optimizer(nets, args):
+    """
+    Create an optimizer for training different parts of the model based on vis_train_mode.
+
+    Args:
+        nets: Tuple of (net_sound, net_frame, net_synthesizer).
+        args: Object with hyperparameters (e.g., learning rates, momentum, weight decay).
+        vis_train_mode: Specifies which training phase:
+            - 'stage_1': Train non-ViT parameters of the visual net (net_frame.fc).
+            - 'stage_2': Train non-ViT parameters of the visual net and audio/synthesizer nets.
+            - 'stage_3': Train all parameters (visual net, audio net, synthesizer net).
+
+    Returns:
+        torch.optim.Optimizer: Configured optimizer.
+    """
     (net_sound, net_frame, net_synthesizer) = nets
-    param_groups = [{'params': net_sound.parameters(), 'lr': args.lr_sound},
-                    {'params': net_synthesizer.parameters(), 'lr': args.lr_synthesizer},
-                    {'params': net_frame.features.parameters(), 'lr': args.lr_frame},
-                    {'params': net_frame.fc.parameters(), 'lr': args.lr_sound}]
+
+    vis_train_mode = args.vis_train_mode
+
+    param_groups = []
+
+    if vis_train_mode == 'stage_1':
+        # Train only non-ViT parameters of the visual net
+        param_groups.append({'params': net_frame.feature_projector.parameters(), 'lr': args.lr_frame})
+
+    elif vis_train_mode == 'stage_2':
+        # Train non-ViT parameters of visual net + audio net + synthesizer net
+        param_groups.extend([
+            {'params': net_sound.parameters(), 'lr': args.lr_sound},
+            {'params': net_synthesizer.parameters(), 'lr': args.lr_synthesizer},
+            {'params': net_frame.feature_projector.parameters(), 'lr': args.lr_frame},
+        ])
+
+    elif vis_train_mode == 'stage_3':
+        # Train all parameters (including ViT in visual net)
+        param_groups.extend([
+            {'params': net_sound.parameters(), 'lr': args.lr_sound},
+            {'params': net_synthesizer.parameters(), 'lr': args.lr_synthesizer},
+            {'params': net_frame.vit.parameters(), 'lr': args.lr_frame},
+            {'params': net_frame.feature_projector.parameters(), 'lr': args.lr_frame},
+        ])
+
+    else:
+        raise ValueError(f"Invalid vis_train_mode: {vis_train_mode}. Must be 'stage_1', 'stage_2', or 'stage_3'.")
+
     return torch.optim.SGD(param_groups, momentum=args.beta1, weight_decay=args.weight_decay)
 
 
